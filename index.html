@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>30秒お部屋ガチャ</title>
+    <title>ミニミニFC蒲郡店お部屋ガチャ</title>
     <style>
         /* 見た目を整える設定 */
         body { font-family: "Helvetica Neue", Arial, sans-serif; text-align: center; background-color: #f5f6fa; color: #2f3640; padding: 20px; }
@@ -24,8 +24,8 @@
 <body>
 
 <div class="container">
-    <h1>🏠 運命の物件診断ガチャ</h1>
-    <p>蒲郡での新しい暮らし、<br>まずはガチャで占ってみませんか？</p>
+    <h1>🏠 運命のお部屋診断ガチャ</h1>
+    <p>蒲郡・幸田での新しい暮らし<br>お部屋ガチャで占ってみませんか？</p>
     
     <!-- 1. ガチャを回すボタン -->
     <button id="gacha-btn" onclick="spinGacha()">ガチャを回す！</button>
@@ -35,6 +35,12 @@
         <img id="room-img" src="" alt="物件画像">
         <h2 id="room-name" class="room-name">物件名</h2>
         <div id="room-price" class="price">家賃：--</div>
+        <!-- ↓ここから追加↓ -->
+<div style="font-size: 1rem; color: #4b4b4b; margin-bottom: 10px; font-weight: bold;">
+    📍 <span id="room-address">場所</span> <br>
+    🏠 間取り：<span id="room-layout">--</span>
+</div>
+<!-- ↑ここまで追加↑ -->
         <div class="comment-box">
             <span id="room-comment">コメントがここに入ります。</span>
         </div>
@@ -68,6 +74,10 @@
             document.getElementById('room-img').src = room.img;
             document.getElementById('room-name').innerText = room.name;
             document.getElementById('room-price').innerText = "家賃：" + room.price;
+            // ↓ここから2行追加↓
+document.getElementById('room-address').innerText = room.address;
+document.getElementById('room-layout').innerText = room.layout;
+// ↑ここまで追加↑
             document.getElementById('room-comment').innerText = room.comment;
             document.getElementById('room-link').href = room.url;
 
