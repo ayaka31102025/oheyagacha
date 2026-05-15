@@ -3,23 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ミニミニFC蒲郡店お部屋ガチャ</title>
+    <title>30秒お部屋ガチャ</title>
     <style>
-        /* 見た目を整える設定 */
+        /* 全体の見た目 */
         body { font-family: "Helvetica Neue", Arial, sans-serif; text-align: center; background-color: #f5f6fa; color: #2f3640; padding: 20px; }
         .container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        h1 { color: #e84118; font-size: 1.5rem; margin-bottom: 20px; }
+        h1 { color: #e84118; font-size: 1.5rem; margin-bottom: 15px; }
+        
+        /* 間取り選択エリア */
+        .filter-section { text-align: left; background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #e1e4e8; }
+        .filter-title { font-weight: bold; font-size: 0.9rem; margin-bottom: 10px; color: #4b4b4b; display: block; }
+        .checkbox-group { display: flex; flex-direction: column; gap: 8px; }
+        .checkbox-item { display: flex; align-items: center; font-size: 1rem; cursor: pointer; padding: 5px 0; }
+        .checkbox-item input { margin-right: 10px; transform: scale(1.2); cursor: pointer; }
+
+        /* ガチャボタン */
         button { background: #e84118; color: white; border: none; padding: 15px 40px; font-size: 1.1rem; font-weight: bold; border-radius: 50px; cursor: pointer; transition: 0.3s; width: 100%; }
         button:hover { background: #c23616; transform: translateY(-2px); }
         button:disabled { background: #dcdde1; cursor: not-allowed; }
+        
+        /* 結果表示エリア */
         .result { display: none; margin-top: 30px; text-align: left; border-top: 2px dashed #dcdde1; padding-top: 20px; }
         .result img { width: 100%; border-radius: 10px; margin-bottom: 15px; border: 1px solid #dcdde1; }
         .room-name { font-size: 1.3rem; font-weight: bold; margin: 0 0 10px 0; color: #2f3640; }
         .price { color: #e84118; font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; }
         .comment-box { background: #f1f2f6; padding: 15px; border-radius: 10px; font-size: 0.95rem; line-height: 1.6; position: relative; margin-bottom: 15px; }
         .comment-box::before { content: "スタッフの推しポイント："; display: block; font-weight: bold; color: #718093; font-size: 0.8rem; margin-bottom: 5px; }
-        .link-btn { display: block; text-align: center; background: #0097e6; color: white; text-decoration: none; padding: 10px; border-radius: 5px; font-weight: bold; }
-    /* --- ここからSNSボタン用のCSS --- */
+        .link-btn { display: block; text-align: center; background: #0097e6; color: white; text-decoration: none; padding: 12px; border-radius: 5px; font-weight: bold; }
+
+        /* SNSボタン */
         .sns-btn { display: block; text-align: center; color: white; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: bold; margin-top: 10px; font-size: 0.9rem; }
         .btn-insta { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
         .btn-tiktok { background: #000000; }
@@ -27,84 +39,98 @@
         .sns-caption { text-align: center; font-size: 0.85rem; color: #718093; margin-top: 20px; font-weight: bold; }
     </style>
 </head>
-    </style>
-</head>
 <body>
 
 <div class="container">
-    <h1>🏠 運命のお部屋診断ガチャ</h1>
-    <p>蒲郡・幸田での新しい暮らし<br>お部屋ガチャで占ってみませんか？</p>
+    <h1>🏠 運命の物件診断ガチャ</h1>
     
-    <!-- 1. ガチャを回すボタン -->
+    <div class="filter-section">
+        <span class="filter-title">希望の間取り（複数選択可）：</span>
+        <div class="checkbox-group">
+            <label class="checkbox-item"><input type="checkbox" name="layout" value="1系" checked> 1R／1K／1LDK</label>
+            <label class="checkbox-item"><input type="checkbox" name="layout" value="2系"> 2K／2DK／2LDK</label>
+            <label class="checkbox-item"><input type="checkbox" name="layout" value="3系"> 3K／3DK／3LDK</label>
+        </div>
+    </div>
+    
     <button id="gacha-btn" onclick="spinGacha()">ガチャを回す！</button>
 
-    <!-- 2. 結果が表示されるエリア -->
     <div id="result-card" class="result">
         <img id="room-img" src="" alt="物件画像">
         <h2 id="room-name" class="room-name">物件名</h2>
         <div id="room-price" class="price">家賃：--</div>
-        <!-- ↓ここから追加↓ -->
-<div style="font-size: 1rem; color: #4b4b4b; margin-bottom: 10px; font-weight: bold;">
-    📍 <span id="room-address">場所</span> <br>
-    🏠 間取り：<span id="room-layout">--</span>
-</div>
-<!-- ↑ここまで追加↑ -->
-        <div class="comment-box">
-            <span id="room-comment">コメントがここに入ります。</span>
+        
+        <div style="font-size: 1rem; color: #4b4b4b; margin-bottom: 10px; font-weight: bold;">
+            📍 <span id="room-address">場所</span> <br>
+            🏠 間取り：<span id="room-layout">--</span>
         </div>
-        <a id="room-link" class="link-btn" href="#" target="_blank">この物件を詳しく見る →</a>
-        <!-- ↓ここから貼り付け↓ -->
-        <div class="sns-caption">＼ ほかの物件も動画で確認！ ／</div>
-        
-        <a href="https://www.instagram.com/minimini_marushichi10/?hl=ja" class="sns-btn btn-insta" target="_blank">
-            📷 Instagram
-        </a>
-        
-        <a href="https://www.tiktok.com/@miniminifcgamagoori" class="sns-btn btn-tiktok" target="_blank">
-            🎵 TikTok
-        </a>
 
-        <a href="https://www.youtube.com/@minimini_gamagori" class="sns-btn btn-youtube" target="_blank">
-            ▶️ YouTube
-        </a>
-        <!-- ↑ここまで貼り付け↑ -->
+        <div class="comment-box">
+            <span id="room-comment">コメントが入ります。</span>
+        </div>
+
+        <a id="room-link" class="link-btn" href="#" target="_blank">この物件を詳しく見る →</a>
+
+        <div class="sns-caption">＼ ほかの物件も動画でチェック！ ／</div>
+        <a href="https://www.instagram.com/minimini_marushichi10/" class="sns-btn btn-insta" target="_blank">📷 Instagram（ルームツアー）</a>
+        <a href="https://www.tiktok.com/@miniminifcgamagoori" class="sns-btn btn-tiktok" target="_blank">🎵 TikTok（ショート内見）</a>
+        <a href="https://www.youtube.com/@minimini_gamagori" class="sns-btn btn-youtube" target="_blank">▶️ YouTube（詳しく内見）</a>
     </div>
 </div>
 
 <script>
-    // 【重要】ここにGASで発行されたURLを貼り付けてください
     const GAS_URL = "https://script.google.com/macros/s/AKfycby6Ui3LYGG7q9w0T_PS2m5lIlht9uXXWT-bhcn4Fv0JyB6fwcUcvCQndAyyFXc_-HDNYw/exec";
 
     async function spinGacha() {
         const btn = document.getElementById('gacha-btn');
         const card = document.getElementById('result-card');
         
-        // 演出：ボタンを無効化し、カードを隠す
+        // チェックされている間取りの値を取得
+        const selectedValues = Array.from(document.querySelectorAll('input[name="layout"]:checked')).map(cb => cb.value);
+        
+        if (selectedValues.length === 0) {
+            alert("希望の間取りを選んでくださいね！");
+            return;
+        }
+
         btn.disabled = true;
-        btn.innerText = "運命の物件を探しています...";
+        btn.innerText = "条件に合うお部屋を探しています...";
         card.style.display = "none";
 
         try {
-            // GASからデータを取得
             const response = await fetch(GAS_URL);
-            if (!response.ok) throw new Error('データが取れませんでした');
-            const rooms = await response.json();
+            const allRooms = await response.json();
 
-            // ランダムに1件選ぶ
-            const room = rooms[Math.floor(Math.random() * rooms.length)];
+            // スプレッドシート内のlayout列の文字を見て振り分け
+            const filteredRooms = allRooms.filter(room => {
+                const layout = room.layout;
+                if (!layout) return false;
 
-            // 画面にデータをセット
+                if (selectedValues.includes("1系") && (layout.includes("1R") || layout.includes("1K") || layout.includes("1DK") || layout.includes("1LDK"))) return true;
+                if (selectedValues.includes("2系") && (layout.includes("2K") || layout.includes("2DK") || layout.includes("2LDK"))) return true;
+                if (selectedValues.includes("3系") && (layout.includes("3K") || layout.includes("3DK") || layout.includes("3LDK") || layout.includes("4"))) return true;
+                return false;
+            });
+
+            if (filteredRooms.length === 0) {
+                alert("指定された間取りの物件が現在シートにありません。条件を変えてみてください！");
+                btn.disabled = false;
+                btn.innerText = "ガチャを回す！";
+                return;
+            }
+
+            // 抽選
+            const room = filteredRooms[Math.floor(Math.random() * filteredRooms.length)];
+
+            // 画面に反映
             document.getElementById('room-img').src = room.img;
             document.getElementById('room-name').innerText = room.name;
             document.getElementById('room-price').innerText = "家賃：" + room.price;
-            // ↓ここから2行追加↓
-document.getElementById('room-address').innerText = room.address;
-document.getElementById('room-layout').innerText = room.layout;
-// ↑ここまで追加↑
+            document.getElementById('room-address').innerText = room.address;
+            document.getElementById('room-layout').innerText = room.layout;
             document.getElementById('room-comment').innerText = room.comment;
             document.getElementById('room-link').href = room.url;
 
-            // 0.8秒待ってから表示（演出用）
             setTimeout(() => {
                 card.style.display = "block";
                 btn.disabled = false;
@@ -113,7 +139,7 @@ document.getElementById('room-layout').innerText = room.layout;
 
         } catch (error) {
             console.error(error);
-            alert("エラーが発生しました。GASのURLが正しいか、デプロイ設定が「全員」になっているか確認してください。");
+            alert("データの読み込みに失敗しました。GASの公開設定を確認してください。");
             btn.disabled = false;
             btn.innerText = "やり直す";
         }
