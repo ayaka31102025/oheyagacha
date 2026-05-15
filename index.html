@@ -84,8 +84,6 @@
     async function spinGacha() {
         const btn = document.getElementById('gacha-btn');
         const card = document.getElementById('result-card');
-        
-        // チェックされている間取りの値を取得
         const selectedValues = Array.from(document.querySelectorAll('input[name="layout"]:checked')).map(cb => cb.value);
         
         if (selectedValues.length === 0) {
@@ -101,7 +99,6 @@
             const response = await fetch(GAS_URL);
             const allRooms = await response.json();
 
-            // スプレッドシート内のlayout列の文字を見て振り分け
             const filteredRooms = allRooms.filter(room => {
                 const layout = room.layout;
                 if (!layout) return false;
@@ -119,10 +116,8 @@
                 return;
             }
 
-            // 抽選
             const room = filteredRooms[Math.floor(Math.random() * filteredRooms.length)];
 
-            // 画面に反映
             document.getElementById('room-img').src = room.img;
             document.getElementById('room-name').innerText = room.name;
             document.getElementById('room-price').innerText = "家賃：" + room.price;
@@ -131,15 +126,16 @@
             document.getElementById('room-comment').innerText = room.comment;
             document.getElementById('room-link').href = room.url;
 
+            // 待ち時間を 800ミリ秒 から 200ミリ秒 に短縮
             setTimeout(() => {
                 card.style.display = "block";
                 btn.disabled = false;
                 btn.innerText = "もう一度回す！";
-            }, 800);
+            }, 200);
 
         } catch (error) {
             console.error(error);
-            alert("データの読み込みに失敗しました。GASの公開設定を確認してください。");
+            alert("データの読み込みに失敗しました。");
             btn.disabled = false;
             btn.innerText = "やり直す";
         }
